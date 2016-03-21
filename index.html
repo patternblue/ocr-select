@@ -1,0 +1,33 @@
+<DOCTYPE! html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OCR Select</title>
+	<link rel="stylesheet" type="text/css" href="css/scss/ocr-select.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+	<div id="grid-container" class="row">
+		<form>
+			<input id="your-img" type="file" name="pic" accept="image/*">
+		</form>
+		<div id="image-area">
+			<img id="uploaded-img" alt="Your image will be displayed here">
+			<div id="box-select"></div>
+		</div>
+		<div id="results-area">
+			<canvas id="test-area"></canvas>
+			<div id="progress"></div>
+			<div id="display"></div>
+		</div>
+	</div>
+
+
+	<!-- scripts here -->
+	<!-- OCR API provided by tesseract.js:
+		http://tesseract.projectnaptha.com/#docs
+		https://github.com/naptha/tesseract.js -->
+	<script src="http://tenso.rs/tesseract.js"></script>
+	<script type="text/javascript" src="ocr-select.js"></script>
+</body>
+</html>

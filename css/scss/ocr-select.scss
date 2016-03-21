@@ -1,0 +1,34 @@
+@import 'modules/reset';
+@import 'mixins/clearfix';
+@import 'modules/box-sizing';
+@import 'mixins/bottom-footer';
+
+@import 'mixins/vertical-align';
+@import 'mixins/grid';
+@import 'mixins/dropdown-menu';
+@import 'mixins/respond-to';
+/*comment this out if you do not want red border markers*/
+/*@import 'modules/red-borders';*/
+
+#image-area{
+	@include grid-col(6, 12, 0);
+	position: relative;
+	overflow: scroll;
+}
+.box-active{
+	display: block !important;
+}
+#box-select{
+	display: none;
+	z-index: 9000;
+		
+	position: absolute !important;
+	cursor: default !important;
+
+	background-color: rgba(239, 28, 190, 0.6);
+	border: 1px solid #b20e8c;
+}
+#results-area{
+	@include grid-col(6, 12, 0);
+	background-color: #5fb;
+}

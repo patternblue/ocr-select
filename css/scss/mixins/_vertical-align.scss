@@ -1,0 +1,7 @@
+/*parent must have a given height*/
+
+@mixin vertical-align{
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}

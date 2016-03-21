@@ -1,0 +1,25 @@
+/*
+grid
+*/
+
+/*the parent row/container*/
+.row{
+	@include clearfix;
+}
+/*mixin for each column of grid*/
+@mixin grid-col($i, $cols, $gutterPercentage) {
+/*	@function getWidth($element){
+		@return $element;
+	}*/
+	width: ((100% - ($gutterPercentage * ($cols - 1))) * ($i / $cols)) + ($gutterPercentage * ($i - 1));
+	
+	/*margin-right: $gutterPercentage;*/
+	&:nth-child(n) {
+		margin-right: $gutterPercentage;
+	}
+
+	float: left;
+	&:last-child {
+		margin-right: 0;
+	}
+}

@@ -1,0 +1,27 @@
+
+@mixin respond-to-sm($breakSmall){
+    @media only screen and (max-width: $breakSmall){
+    	@content;
+    }
+}
+@mixin respond-to-md($breakSmall, $breakLarge){
+    @media only screen and (min-width: $breakSmall + 1) and (max-width: $breakLarge - 1){
+    	@content;
+    }
+}
+@mixin respond-to-lg($breakLarge) {
+    @media only screen and (min-width: $breakLarge){
+    	@content;
+    }
+}
+
+@mixin respond-to-sm-md($breakLarge){
+    @media only screen and (max-width: $breakLarge - 1){
+    	@content;
+    }
+}
+@mixin respond-to-md-lg($breakSmall){
+    @media only screen and (min-width: $breakSmall + 1){
+    	@content;
+    }
+}
