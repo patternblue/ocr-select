@@ -9,10 +9,13 @@
 <body>
 	<div id="grid-container" class="row">
 		<form>
-			<input id="your-img" type="file" name="pic" accept="image/*">
+			<input id="img-input" type="file" name="pic" accept="image/*, application/pdf">
 		</form>
 		<div id="image-area">
-			<img id="uploaded-img" alt="Your image will be displayed here">
+
+			<!-- <img id="uploaded-img" alt="Your image will be displayed here"> -->
+			<canvas id="uploaded-img"></canvas>
+
 			<div id="box-select"></div>
 		</div>
 		<div id="results-area">
@@ -24,10 +27,13 @@
 
 
 	<!-- scripts here -->
+
+	<!-- pdf to image converter from pdf.js -->
+	<script type="text/javascript" src="external/pdf.js"></script>	
 	<!-- OCR API provided by tesseract.js:
 		http://tesseract.projectnaptha.com/#docs
 		https://github.com/naptha/tesseract.js -->
-	<script src="http://tenso.rs/tesseract.js"></script>
+	<script type="text/javascript" src="http://tenso.rs/tesseract.js"></script>
 	<script type="text/javascript" src="ocr-select.js"></script>
 </body>
 </html>

@@ -90,6 +90,11 @@ grid
     margin-right: 0; }
   #image-area:last-child {
     margin-right: 0; }
+  #image-area #uploaded-img {
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*width: 800px;*/
+    /*height: 900px;*/ }
 
 .box-active {
   display: block !important; }

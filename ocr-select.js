@@ -51,8 +51,12 @@ function runOCR(img, ocrAPI){
 }
 
 function initImageObj(){
-	this.canvas = document.getElementById('test-area');
-	this.context = this.canvas.getContext('2d');
+	this.testArea = {};
+	this.testArea.canvas = document.getElementById('test-area');
+	this.testArea.context = this.testArea.canvas.getContext('2d');
+	this.sourceArea = {};
+	this.sourceArea.canvas = document.getElementById('uploaded-img');
+	this.sourceArea.context = this.sourceArea.canvas.getContext('2d');
 
 	// imageObject's methods
 	this.removeBox = function(){
@@ -93,7 +97,7 @@ function initImageObj(){
 		$(document).unbind('mousemove', this.getSize);
 		$(document).unbind('mouseup', this.captureArea);
 
-		// mouse position on canvas - initial mousedown position on canvas
+		// mouse position on testArea.canvas - initial mousedown position on testArea.canvas
 		// where to start clipping
 		if(this.mouseX < this.initX){
 			var clipX = this.mouseX;
@@ -112,15 +116,16 @@ function initImageObj(){
 		var x = 0;
 		var y = 0;
 
-		// set up canvas dimensions and draw the image
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.canvas.width = clipWidth;
-		this.canvas.height = clipHeight;
-		this.context.drawImage(this, clipX, clipY, clipWidth, clipHeight, x, y, clipWidth, clipHeight);
+		// set up testArea.canvas dimensions and draw the image
+		this.testArea.context.clearRect(0, 0, this.testArea.canvas.width, this.testArea.canvas.height);
+		this.testArea.canvas.width = clipWidth;
+		this.testArea.canvas.height = clipHeight;
+		this.testArea.context.drawImage(this, clipX, clipY, clipWidth, clipHeight, x, y, clipWidth, clipHeight);
 
-		// prepare canvas's drawn image for OCR API 
+		// prepare testArea.canvas's drawn image for OCR API 
 		var img = new Image();
-		img.src = this.canvas.toDataURL("image/jpeg", 0.1);
+		img.src = this.testArea.canvas.toDataURL("image/jpeg", 1.0);
+		console.log(img.src);
 		// image must load first before running OCR!
 		img.onload = function(){
 			runOCR(this, Tesseract);
@@ -130,7 +135,7 @@ function initImageObj(){
 
 function main(){
 
-	var yourImg = document.getElementById('your-img');
+	var imgInput = document.getElementById('img-input');
 
 	// init my image object
 	var imageObj = new Image();	
@@ -140,28 +145,90 @@ function main(){
     imageObj.captureArea = imageObj.captureArea.bind(imageObj);
     renderBox = renderBox.bind(imageObj);
 
+
     // prevent dragging the image when you click to drag a box
     $('#uploaded-img').on('dragstart', function(event) { event.preventDefault(); });
 
-    // upload an image
-	yourImg.onchange = function(){
-		$('#uploaded-img').unbind('mousedown', imageObj.initBox);
-		// change src of uploaded img
-	    var reader = new FileReader();
 
-    	reader.onload = function (e) {
-    		// view:
-	        var uploadedImg = document.getElementById("uploaded-img");
-	        uploadedImg.src = e.target.result;
-	        
-	        // model:
-	        imageObj.src = uploadedImg.src;
-	        $('#uploaded-img').on('mousedown', imageObj.initBox);
-	    };
-	    // read image file as data URL
-        reader.readAsDataURL(this.files[0]);
+    // upload an image
+	imgInput.onchange = function(){
+		$('#uploaded-img').unbind('mousedown', imageObj.initBox);
+
+		var fileTypesIMG = ['jpg', 'jpeg', 'png'];
+		var fileTypesPDF = ['pdf']; 
+		var inputExtension = this.files[0].name.split('.').pop().toLowerCase(),
+		// console.log(inputExtension);
+			isPDF = fileTypesPDF.indexOf(inputExtension) > -1,
+			isIMG = fileTypesIMG.indexOf(inputExtension) > -1;
+
+		if (isPDF){
+		        var tmpPath = URL.createObjectURL(this.files[0]);
+				PDFJS.getDocument(tmpPath).then(function(pdf){
+  					pdf.getPage(1).then(function(page){
+  						var scale = 1;
+						var viewport = page.getViewport(scale);
+
+						// var canvas = document.getElementById('the-canvas');
+						// var context = canvas.getContext('2d');
+						imageObj.sourceArea.context.clearRect(0, 0, viewport.width, viewport.height);
+						imageObj.sourceArea.canvas.width = viewport.width;
+						imageObj.sourceArea.canvas.height = viewport.height;
+
+						var renderContext = {
+						  canvasContext: imageObj.sourceArea.context,
+						  viewport: viewport
+						};
+						page.render(renderContext).promise.then(function(){
+	  						imageObj.src = imageObj.sourceArea.canvas.toDataURL("image/jpeg", 1.0);
+	  						console.log(imageObj.src);
+	  						imageObj.onload = function(){
+	  							$('#uploaded-img').on('mousedown', imageObj.initBox);
+	  						}
+	  					});
+						
+  					});
+				});
+
+		}else if(isIMG){
+			// change src of uploaded img
+		    var reader = new FileReader();
+
+	    	reader.onload = function (e) {
+
+		        // for canvas files
+				imageObj.src = e.target.result;
+
+				imageObj.sourceArea.context.clearRect(0, 0, imageObj.width, imageObj.height);
+				imageObj.sourceArea.canvas.width = imageObj.width;
+				imageObj.sourceArea.canvas.height = imageObj.height;
+				imageObj.sourceArea.context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height);	
+
+		        // attach listener to create a box whenever the upload-img is clicked on
+		        $('#uploaded-img').on('mousedown', imageObj.initBox);
+		    };
+
+		    // read image file as data URL
+	        reader.readAsDataURL(this.files[0]);		
+		}else{
+			// console log error
+			console.log('error! invalid file type');
+		}
+
+
 	}
 
+
+
+// model:
+// imageObj
+// box
+
+// view:
+// img-input
+// img-uploaded
+// img-testArea
+// box
+// 	render
 
 	console.log('ran main');
 
