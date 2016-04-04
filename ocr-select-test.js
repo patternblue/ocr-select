@@ -1,8 +1,9 @@
 $(document).ready(main);
 
-// Model
-window.app = {};
 
+// window.ocrSelectApp = {};
+
+// Model
 (function(window){
 	function Model(){
 
@@ -58,8 +59,8 @@ window.app = {};
 
 	};
 
-	// window.app = window.app || {};
-	window.app.model = new Model();
+	window.ocrSelectApp = window.ocrSelectApp || {};
+	window.ocrSelectApp.model = new Model();
 })(window);
 
 (function(window){
@@ -140,8 +141,8 @@ window.app = {};
 
 
 
-	// window.app = window.app || {};
-	window.app.view = new View();
+	window.ocrSelectApp = window.ocrSelectApp || {};
+	window.ocrSelectApp.view = new View();
 })(window);
 
 (function(window){
@@ -268,17 +269,17 @@ window.app = {};
 
 	};
 
-	// window.app = window.app || {};
-	window.app.controller = new Controller();
+	window.ocrSelectApp = window.ocrSelectApp || {};
+	window.ocrSelectApp.controller = new Controller();
 })(window);
 
 
 
 function main(){
 
-	myModel = window.app.model;
-	myView = window.app.view;
-	myController = window.app.controller;
+	myModel = window.ocrSelectApp.model;
+	myView = window.ocrSelectApp.view;
+	myController = window.ocrSelectApp.controller;
 	myController.init(myModel, myView);
 
 	console.log('ran main');
